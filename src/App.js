@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import Button from "@material-ui/core/Button";
 import { Input, InputLabel, FormControl } from "@material-ui/core";
+import SaveIcon from '@material-ui/icons/Save';
 import { Todo } from "./components/Todo";
 import database from "./firebase";
 import firebase from "firebase";
@@ -16,7 +17,7 @@ function App() {
       .collection("todos")
       .orderBy("timeStamp", "desc")
       .onSnapshot((snapshot) => {
-        setTodo(snapshot.docs.map((doc) => doc.data().todo));
+        setTodo(snapshot.docs.map((doc) => ({id:doc.id,todos:doc.data().todo})));
       });
   }, [input]);
 
@@ -55,13 +56,14 @@ function App() {
         disabled={!input}
         variant="contained"
         color="primary"
+        startIcon={<SaveIcon />}
       >
         Save Task
       </Button>
 
       <ul>
-        {todo.map((todo, index) => (
-          <Todo id={index} todo={todo} />
+        {todo.map((todo, id) => (
+          <Todo id={id} todo={todo} />
         ))}
       </ul>
     </div>
